@@ -1,19 +1,20 @@
 package services
 
 import (
-	"books/models"
 	"errors"
 	"fmt"
+
+	"github.com/kkk-petrov/gobooks-api/models"
 
 	"gorm.io/gorm"
 )
 
 type BooksService interface {
-	Create(book models.Book) error
-	FindAll() ([]models.Book, error)
-	FindById(id int) (models.Book, error)
-	Update(id int, data models.UpdateBookDto) error
-	Delete(id int) error
+	CreateBook(book models.Book) error
+	FindAllBooks() ([]models.Book, error)
+	FindBookById(id int) (models.Book, error)
+	UpdateBook(id int, data models.UpdateBookDto) error
+	DeleteBook(id int) error
 }
 
 type booksService struct {
@@ -26,7 +27,7 @@ func NewBooksService(db *gorm.DB) booksService {
 	}
 }
 
-func (s booksService) Create(book models.Book) error {
+func (s *booksService) CreateBook(book models.Book) error {
 	err := s.db.Create(&book).Error
 	if err != nil {
 		return err
@@ -35,7 +36,7 @@ func (s booksService) Create(book models.Book) error {
 	return nil
 }
 
-func (s booksService) FindAll() ([]models.Book, error) {
+func (s *booksService) FindAllBooks() ([]models.Book, error) {
 	var books []models.Book
 	err := s.db.Find(&books).Error
 	if err != nil {
@@ -44,7 +45,7 @@ func (s booksService) FindAll() ([]models.Book, error) {
 	return books, nil
 }
 
-func (s booksService) FindById(id int) (models.Book, error) {
+func (s *booksService) FindBookById(id int) (models.Book, error) {
 	var book models.Book
 
 	err := s.db.First(&book, "id = ?", id).Error
@@ -57,7 +58,7 @@ func (s booksService) FindById(id int) (models.Book, error) {
 	return book, nil
 }
 
-func (s booksService) Update(id int, data models.UpdateBookDto) error {
+func (s *booksService) UpdateBook(id int, data models.UpdateBookDto) error {
 	err := s.db.Model(&models.Book{}).Where("id = ?", id).Updates(data).Error
 	if err != nil {
 		return err
@@ -65,7 +66,7 @@ func (s booksService) Update(id int, data models.UpdateBookDto) error {
 	return nil
 }
 
-func (s booksService) Delete(id int) error {
+func (s *booksService) DeleteBook(id int) error {
 	err := s.db.Delete(&models.Book{}, "id = ?", id).Error
 	return err
 }

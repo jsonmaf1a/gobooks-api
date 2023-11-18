@@ -1,9 +1,10 @@
 package database
 
 import (
-	"books/models"
 	"fmt"
 	"os"
+
+	"github.com/kkk-petrov/gobooks-api/models"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
